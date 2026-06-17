@@ -3,6 +3,7 @@
 //
 
 #include "SimulationEngine.h"
+#include "Consumable.h"
 #include <fstream>
 #include <iostream>
 
@@ -16,12 +17,7 @@ void SimulationEngine::log(const string& msg) {
 }
 
 void SimulationEngine::checkAndRunCombat() {
-    cout << "\nSientes una presencia extrannia en este lugar...\n";
-    cout << "Presiona ENTER para continuar.";
-    string pause;
-    getline(cin, pause);
-
-    Space* sp = world->getCurrentSpace();
+   Space* sp = world->getCurrentSpace();
     auto player = world->getPlayer();
     if (!sp || !player)
         return;
@@ -71,9 +67,49 @@ void SimulationEngine::checkAndRunCombat() {
 void SimulationEngine::checkNarratives() {
     Space* sp = world->getCurrentSpace();
     if (!sp) return;
-    for (auto& ev : sp->getEvents())
-        if (!ev->wasExecuted())
-            ev->activate(&Logger::getInstance());
+
+    for (int i = 0; i < (int)sp->getEvents().size(); i++) {
+        if (!sp->getEvents()[i]->wasExecuted()) {
+            sp->getEvents()[i]->activate(&Logger::getInstance());
+        }
+    }
+
+    // Ranma's market
+    if (sp->getId() == "casa_bruja") {
+        auto player = world->getPlayer();
+        cout << "\nLa Bruja Ranma te mira fijamente.\n";
+        cout << "  'Tengo una pocion de hongos danta. Restaura tu salud dependiendo de tu raza.'\n";
+        cout << "  'Cuesta 60 de oro. Tienes " << player->getGold() << " de oro.'\n";
+        cout << "Comprar? [1] Si   [2] No\n";
+        cout << "Opcion: ";
+        string input;
+        getline(cin, input);
+
+        if (input == "1") {
+            if (player->getGold() >= 60) {
+                player->addGold(-60);
+                //Made the potion and give to the traveler
+                auto pocion = make_shared<Consumable>(
+                    "Pocion de Hongos Danta",
+                    "Una pocion preparada por la Bruja Ranma. Restaura toda tu salud.",
+                    0.5f, 30, 100, "heal", 1);
+                try {
+                    player->pickUpItem(pocion);
+                    cout << "Compraste: Pocion de Hongos Danta.\n";
+                    cout << "Te quedan " << player->getGold() << " de oro.\n";
+                    log(player->getName() + " compro: Pocion de Hongos Danta");
+                } catch (const exception& e) {
+                    player->addGold(30); //return your gold if don't are space in your backpack
+                    cout << "[!] No hay espacio en el inventario. Se te devolvio el oro.\n";
+                }
+            } else {
+                cout << "No tienes suficiente oro.\n";
+                cout << "  'Vuelve cuando tengas 30 de oro,' dice la bruja.\n";
+            }
+        } else {
+            cout << "La bruja asiente y sigue revolviendo su caldero.\n";
+        }
+    }
 }
 
 void SimulationEngine::handleItems() {
@@ -105,11 +141,21 @@ void SimulationEngine::handleItems() {
         log(world->getPlayer()->getName()
             + " recogio: " + found->getName());
 
-        if (found->getCategory() == "weapon"
-            && !world->getPlayer()->getEquippedWeapon()) {
-            world->getPlayer()->equipWeapon(found->getName());
-            cout << "Equipaste: " << found->getName() << "\n";
+        //ask if they want to equip the weapon
+        if (found->getCategory() == "weapon") {
+            cout << "Quieres equipar '"
+                 << found->getName() << "'? [1] Si   [2] No\n";
+            cout << "Opcion: ";
+            string opcion;
+            getline(cin, opcion);
+            if (opcion == "1") {
+                world->getPlayer()->equipWeapon(found->getName());
+                cout << "Equipaste: " << found->getName() << "\n";
+                log(world->getPlayer()->getName()
+                    + " equipo: " + found->getName());
             }
+        }
+
     } catch (const invalid_argument&) {
         cout << "Entrada invalida.\n";
     } catch (const exception& e) {

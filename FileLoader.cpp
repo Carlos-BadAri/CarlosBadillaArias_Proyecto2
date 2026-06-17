@@ -68,12 +68,16 @@ json FileLoader::defaultSpaces() const {
              {"ambiance","El hielo cubre la piedra."},{"has_boss",false}},
             {{"id","wizard_tower"},{"name","Torre del Mago"},
              {"description","Una torre en ruinas con runas brillantes."},
-             {"ambiance","La energia arcana crepita."},{"has_boss",false}}
+            {"ambiance","La energia arcana crepita."},{"has_boss",false}},
+            {{"id","paramo"},{"name","Paramo"},{"description","Se puede ver a lo lejos una choza con una chimenea humeante."},
+            {"ambiance","Un viento frio y constante barre la llanura desolada."},
+            {"has_boss",false}},
+            {{"id","casa_bruja"},{"name","La Casa de la Bruja"},{"description","Una choza pequenia y calida. Estantes llenos de frascos extrannos cubren las paredes."},
+            {"ambiance","Huele a hierbas y algo que no puedes identificar."},{"has_boss",false}}
          }}},
-        {{"id","zone_dungeon"},{"name","La Mazmorra"},
-         {"description","El oscuro corazon del mal"},
-         {"spaces",{
-            {{"id","dungeon_entrance"},{"name","Entrada de la Mazmorra"},
+
+        {{"id","zone_dungeon"},{"name","La Mazmorra"},{"description","El oscuro corazon del mal"},
+         {"spaces",{{{"id","dungeon_entrance"},{"name","Entrada de la Mazmorra"},
              {"description","Una enorme puerta de hierro."},
              {"ambiance","Huesos cubren los escalones."},{"has_boss",false}},
             {{"id","dungeon_depths"},{"name","Profundidades de la Mazmorra"},
@@ -88,26 +92,30 @@ json FileLoader::defaultSpaces() const {
 
 json FileLoader::defaultConnections() const {
     return {{"connections",{
-        {{"id","c01"},{"from","village_square"},{"to","blacksmith"},      {"direction","norte"}, {"locked",false}},
-        {{"id","c02"},{"from","village_square"},{"to","ancient_forest"},  {"direction","este"},  {"locked",false}},
-        {{"id","c03"},{"from","blacksmith"},    {"to","village_square"},  {"direction","sur"},   {"locked",false}},
-        {{"id","c04"},{"from","ancient_forest"},{"to","village_square"},  {"direction","oeste"}, {"locked",false}},
-        {{"id","c05"},{"from","ancient_forest"},{"to","ruined_chapel"},   {"direction","norte"}, {"locked",false}},
-        {{"id","c06"},{"from","ancient_forest"},{"to","river_crossing"},  {"direction","este"},  {"locked",false}},
-        {{"id","c07"},{"from","ruined_chapel"}, {"to","ancient_forest"},  {"direction","sur"},   {"locked",false}},
-        {{"id","c08"},{"from","ruined_chapel"}, {"to","wizard_tower"},    {"direction","este"},  {"locked",false}},
-        {{"id","c09"},{"from","river_crossing"},{"to","ancient_forest"},  {"direction","oeste"}, {"locked",false}},
-        {{"id","c10"},{"from","river_crossing"},{"to","goblin_camp"},     {"direction","norte"}, {"locked",false}},
-        {{"id","c11"},{"from","river_crossing"},{"to","mountain_pass"},   {"direction","este"},  {"locked",false}},
-        {{"id","c12"},{"from","goblin_camp"},   {"to","river_crossing"},  {"direction","sur"},   {"locked",false}},
-        {{"id","c13"},{"from","mountain_pass"}, {"to","river_crossing"},  {"direction","oeste"}, {"locked",false}},
-        {{"id","c14"},{"from","mountain_pass"}, {"to","dungeon_entrance"},{"direction","este"},  {"locked",false}},
-        {{"id","c15"},{"from","wizard_tower"},  {"to","ruined_chapel"},   {"direction","oeste"}, {"locked",false}},
-        {{"id","c16"},{"from","dungeon_entrance"},{"to","mountain_pass"}, {"direction","oeste"}, {"locked",false}},
-        {{"id","c17"},{"from","dungeon_entrance"},{"to","dungeon_depths"},{"direction","abajo"}, {"locked",true},{"required_key","Llave de Hierro"}},
+        {{"id","c01"},{"from","village_square"},{"to","blacksmith"},{"direction","norte"},{"locked",false}},
+        {{"id","c02"},{"from","village_square"},{"to","ancient_forest"},{"direction","este"},{"locked",false}},
+        {{"id","c03"},{"from","blacksmith"},{"to","village_square"},{"direction","sur"},{"locked",false}},
+        {{"id","c04"},{"from","ancient_forest"},{"to","village_square"},{"direction","oeste"},{"locked",false}},
+        {{"id","c05"},{"from","ancient_forest"},{"to","ruined_chapel"},{"direction","norte"},{"locked",false}},
+        {{"id","c06"},{"from","ancient_forest"},{"to","river_crossing"},{"direction","este"},{"locked",false}},
+        {{"id","c07"},{"from","ruined_chapel"},{"to","ancient_forest"},{"direction","sur"},{"locked",false}},
+        {{"id","c08"},{"from","ruined_chapel"},{"to","wizard_tower"},{"direction","este"},{"locked",false}},
+        {{"id","c09"},{"from","river_crossing"},{"to","ancient_forest"},{"direction","oeste"},{"locked",false}},
+        {{"id","c10"},{"from","river_crossing"},{"to","goblin_camp"}, {"direction","norte"},{"locked",false}},
+        {{"id","c11"},{"from","river_crossing"},{"to","mountain_pass"},{"direction","este"},{"locked",false}},
+        {{"id","c12"},{"from","goblin_camp"},{"to","river_crossing"},{"direction","sur"},{"locked",false}},
+        {{"id","c13"},{"from","mountain_pass"},{"to","river_crossing"},{"direction","oeste"},{"locked",false}},
+        {{"id","c14"},{"from","mountain_pass"},{"to","dungeon_entrance"},{"direction","este"},{"locked",false}},
+        {{"id","c15"},{"from","wizard_tower"},{"to","ruined_chapel"},{"direction","oeste"},{"locked",false}},
+        {{"id","c16"},{"from","dungeon_entrance"},{"to","mountain_pass"},{"direction","oeste"},{"locked",false}},
+        {{"id","c17"},{"from","dungeon_entrance"},{"to","dungeon_depths"},{"direction","abajo"},{"locked",true},{"required_key","Llave de Hierro"}},
         {{"id","c18"},{"from","dungeon_depths"},{"to","dungeon_entrance"},{"direction","arriba"},{"locked",false}},
-        {{"id","c19"},{"from","dungeon_depths"},{"to","throne_room"},     {"direction","norte"}, {"locked",true},{"required_key","Medallon Oscuro"}},
-        {{"id","c20"},{"from","throne_room"},   {"to","dungeon_depths"},  {"direction","sur"},   {"locked",false}}
+        {{"id","c19"},{"from","dungeon_depths"},{"to","throne_room"},{"direction","norte"},{"locked",true},{"required_key","Medallon Oscuro"}},
+        {{"id","c20"},{"from","throne_room"},{"to","dungeon_depths"},{"direction","sur"},{"locked",false}},
+        {{"id","c21"},{"from","ancient_forest"},{"to","paramo"},{"direction","sur"},  {"locked",true}, {"required_key","Polvo de Hadas"}},
+        {{"id","c22"},{"from","paramo"},{"to","ancient_forest"},{"direction","norte"},{"locked",false}},
+        {{"id","c23"},{"from","paramo"},{"to","casa_bruja"},{"direction","oeste"},{"locked",false}},
+        {{"id","c24"},{"from","casa_bruja"},{"to","paramo"},{"direction","este"}, {"locked",false}}
     }}};
 }
 
@@ -153,7 +161,25 @@ json FileLoader::defaultItems() const {
         {{"name","Medallon Oscuro"},{"type","key"},
          {"description","Un medallon que pulsa con energia oscura."},
          {"weight",0.1},{"value",0},
-         {"unlocks","c19"},{"space_id","dungeon_depths"}}
+         {"unlocks","c19"},{"space_id","dungeon_depths"}},
+        {{"name","Espada Vorpal"},
+        {"type","weapon"},
+        {"description","Una espada cuyo filo es capaz de cortar hasta el diamante mas duro."},
+        {"weight",2.8},{"value",150},{"damage",48},
+        {"attack_type","slash"},{"durability",35},
+        {"space_id","paramo"}},
+        {{"name","Polvo de Hadas"},
+        {"type","key"},
+        {"description","Un polvo magico que brilla con luz propia."},
+        {"weight",0.1},{"value",0},
+        {"unlocks","c21"},
+        {"space_id","dungeon_depths"}},
+        {{"name","Pocion de Hongos Danta"},
+        {"type","consumable"},
+        {"description","Una pocion preparada por la Bruja Ranma. Restaura tu salud dependiendo de tu raza."},
+        {"weight",0.5},{"value",60},
+        {"effect_amount",100},{"effect_type","heal"},{"uses",1},
+        {"space_id","none"}}
     }}};
 }
 

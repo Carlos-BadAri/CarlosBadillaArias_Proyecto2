@@ -49,3 +49,4 @@ bool NarrativeEvent::activate(IObserver* logger) {
 string NarrativeEvent::getSummary() const {
     return "Narrativa["+name+"]"+(chosenOption >= 0 ? " | Eligio: "+choices[chosenOption] : "");
 }
+

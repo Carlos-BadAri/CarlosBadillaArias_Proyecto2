@@ -16,6 +16,11 @@ void SimulationEngine::log(const string& msg) {
 }
 
 void SimulationEngine::checkAndRunCombat() {
+    cout << "\nSientes una presencia extrannia en este lugar...\n";
+    cout << "Presiona ENTER para continuar.";
+    string pause;
+    getline(cin, pause);
+
     Space* sp = world->getCurrentSpace();
     auto player = world->getPlayer();
     if (!sp || !player)
@@ -73,34 +78,40 @@ void SimulationEngine::checkNarratives() {
 
 void SimulationEngine::handleItems() {
     Space* sp = world->getCurrentSpace();
-    if (!sp->hasItems())
-        return;
+    if (!sp->hasItems()) return;
 
     cout << "\nObjetos en este lugar:\n";
-    for (auto& item : sp->getItems())
-        cout << "  - " << item->describe() << "\n";
-    cout << "Recoger? (escribe el nombre o ENTER para omitir): ";
+    const auto& items = sp->getItems();
+    for (int i = 0; i < (int)items.size(); i++) {
+        cout << "  [" << (i + 1) << "] "
+             << items[i]->describe() << "\n";
+    }
+    cout << "Recoger? (elija el numero o ENTER para omitir): ";
 
     string input;
     getline(cin, input);
-    if (input.empty())
-        return;
+    if (input.empty()) return;
 
     try {
-        shared_ptr<Item> found = sp->removeItem(input);
+        int idx = stoi(input) - 1;
+        if (idx < 0 || idx >= (int)items.size()) {
+            cout << "Numero invalido.\n";
+            return;
+        }
+        string itemName = items[idx]->getName();
+        shared_ptr<Item> found = sp->removeItem(itemName);
         world->getPlayer()->pickUpItem(found);
         cout << "Recogiste: " << found->getName() << "\n";
-        log(world->getPlayer()->getName() + " recogio: " + found->getName());
+        log(world->getPlayer()->getName()
+            + " recogio: " + found->getName());
 
-        if (found->getCategory() == "weapon") {
-            cout << "Equipar " << found->getName() << "? (s/n): ";
-            string resp;
-            getline(cin, resp);
-            if (resp == "s" || resp == "S") {
-                world->getPlayer()->equipWeapon(found->getName());
-                cout << "Equipaste: " << found->getName() << "\n";
+        if (found->getCategory() == "weapon"
+            && !world->getPlayer()->getEquippedWeapon()) {
+            world->getPlayer()->equipWeapon(found->getName());
+            cout << "Equipaste: " << found->getName() << "\n";
             }
-        }
+    } catch (const invalid_argument&) {
+        cout << "Entrada invalida.\n";
     } catch (const exception& e) {
         cout << "[!] " << e.what() << "\n";
     }
@@ -200,6 +211,7 @@ void SimulationEngine::run() {
         if (moved) {
             cout << world->getCurrentSpace()->getFullDescription();
             log("Se movio " + dir + " hacia: " + world->getCurrentSpace()->getName());
+            world->checkObjectives();
         }
 
         if (!world->getPlayer()->isAlive()) {
@@ -211,16 +223,40 @@ void SimulationEngine::run() {
 }
 
 void SimulationEngine::finish() {
+    auto player = world->getPlayer();
+
+    //count visited places and defeat enemies
+    int visited = 0;
+    for (Space* sp : world->getAllSpaces())
+        if (sp->isVisited()) visited++;
+
+    int derrotados = 0;
+    for (auto& e : world->getEnemies())
+        if (!e->isAlive()) derrotados++;
+
     cout << "\n" << string(46, '=') << "\n";
-    cout << (world->getPlayerWon() ? "  VICTORIA Tu leyenda sera recordada!\n": "   DERROTA. Tu aventura termina aqui.\n");
+    if (world->getPlayerWon()) {
+        cout <<"VICTORIA! Tu leyenda sera recordada!\n";
+    } else {
+        cout <<"DERROTA. Tu aventura termina aqui.\n";
+    }
+    cout << string(46, '-') << "\n";
+    if (player) {
+        cout <<"Heroe:" << player->getName()<< "\n";
+        cout <<"Nivel alcanzado:"<< player->getLevel() << "\n";
+        cout <<"Oro recolectado:"<< player->getGold() << "\n";
+    }
+    cout << "Turnos jugados:"<< world->getCurrentTurn() << "\n";
+    cout << "Lugares visitados:"<< visited << "\n";
+    cout << "Enemigos derrotados:"<< derrotados << "\n";
     cout << string(46, '=') << "\n";
 
-    log("=== Fin: " + string(world->getPlayerWon() ? "VICTORIA" : "DERROTA") + " ===");
+    log("===FIN:"+string(world->getPlayerWon() ?"VICTORIA":"DERROTA")+"===");
 
     try {
         Logger::getInstance().save();
-        cout << "Bitacora guardada: output/adventure_log.txt\n";
-    } catch (const exception& e) {
+        cout << "\nBitacora guardada: output/adventure_log.txt\n";
+    } catch (const exception& e){
         cerr << "Error al guardar bitacora: " << e.what() << "\n";
     }
 }

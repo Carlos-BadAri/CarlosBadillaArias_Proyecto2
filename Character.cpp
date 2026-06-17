@@ -13,26 +13,26 @@ void Character::applyRaceBonuses() {
             stats["magic"]=2;stats["luck"]=5;
             break;
         case Race::ELF:
-            stats["strength"]=3; stats["agility"]=9;
+            stats["strength"]=4; stats["agility"]=9;
             stats["magic"]=5; stats["luck"]=4;
-            attackPower += 2;
+            attackPower += 3;
             break;
         case Race::DWARF:
             stats["strength"]=9; stats["agility"]=2;
             stats["magic"]=1; stats["luck"]=3;
-            defensePower+= 3;
+            defensePower+= 4;
             maxHealth += 20;
             currentHealth += 20;
             break;
         case Race::MAGE:
-            stats["strength"]=2; stats["agility"]=4;
+            stats["strength"]=3; stats["agility"]=4;
             stats["magic"]=10; stats["luck"]=4;
-            attackPower += 5;
+            attackPower += 6;
             break;
         case Race::FAIRY:
-            stats["strength"]=2; stats["agility"]=10;
+            stats["strength"]=3; stats["agility"]=10;
             stats["magic"]=7; stats["luck"]=9;
-            attackPower+= 1;
+            attackPower+= 3;
             maxHealth -= 10;
             currentHealth -= 10;
             break;

@@ -135,11 +135,29 @@ bool World::movePlayer(const string& direction) {
 
 void World::checkObjectives() {
     for (auto& child : mainQuest->getChildren()) {
+
+        //Goal:defeat the boss
         if (child->getId() == "defeat_boss") {
             shared_ptr<Enemy> boss = findEnemy(bossFinalName);
             if (boss && !boss->isAlive() && child->isPending()) {
                 child->complete();
             }
+        }
+
+        //Goal:explore the world (visit at least 6 part)
+        if (child->getId() == "explore") {
+            int visited = 0;
+        for (int i = 0; i < (int)allSpaces.size(); i++) {
+            if (allSpaces[i]->isVisited()) visited++;
+        }
+            if (visited >= 6 && child->isPending())
+                child->complete();
+        }
+
+        //Goal: survive
+        if (child->getId() == "survive") {
+            if (playerWon && child->isPending())
+                child->complete();
         }
     }
     mainQuest->checkChildren();

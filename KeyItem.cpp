@@ -22,7 +22,7 @@ string KeyItem::getType()const {
 }
 
 void KeyItem::use() {
- //la logica de esto esta en Conection
+ //the logic for this is handled Conection
 }
 
 string KeyItem::describe() const {

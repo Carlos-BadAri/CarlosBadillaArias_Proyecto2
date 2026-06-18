@@ -35,7 +35,7 @@ public:
         size++;
     }
 
-    //Aqui lo que se hace es remover por indice y devolver los datos
+    //here is removing by index and return the store data
     T removeAt(int index) {
         if (index < 0 || index >= size) {
             throw out_of_range("Indice de la lista fuera de rango: " + to_string(index));
@@ -57,7 +57,7 @@ public:
         return removed;
     }
 
-    //obtener elemento por indice
+    //obtain an element by index
     T get(int index) const {
         if (index < 0 || index >= size) {
             throw out_of_range("Indice de la lista fuera de rango: " + to_string(index));
@@ -69,7 +69,7 @@ public:
         return current->data;
     }
 
-    //Encontrar el indice de un elemento que coincida con una condicion, si no lo encuentra devuelve -1
+    //find the index of an element matching by condition, returns -1 if don't found
     int findif(bool(*predicate)(T)) const {
         shared_ptr<Node<T>> current = ppio;
         int index = 0;
@@ -94,7 +94,7 @@ public:
         return size;
     }
 
-    //Soporte para iterador range-based for
+    //suport for range-based for iterator
     class Iterator {
     private:
         shared_ptr<Node<T>> current;  // fix: era share_ptr
@@ -106,7 +106,7 @@ public:
         }
 
         Iterator& operator++() {
-            current = current->next;  // fix: faltaba la asignacion
+            current = current->next;
             return *this;
         }
 

@@ -25,7 +25,7 @@ public:
     float getWeight () const;
     int getValue () const;
 
-    //Este metodo retorna el nombre de la categoria
+    //This method retunr the category name
     virtual string getCategory()const=0;
     virtual string getType() const=0;
     virtual void use()=0;

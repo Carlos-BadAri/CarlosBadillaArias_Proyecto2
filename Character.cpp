@@ -146,7 +146,7 @@ bool Character::equipWeapon(const string& weaponName) {
 
     // If it's a decorator, look for the Weapon inside
     if (!w && found->getCategory() == "weapon") {
-        // Crear un Weapon usando los datos del item decorado
+        //Made a weapon using the decorated item's data
         equippedWeapon = make_shared<Weapon>(found->getName(),found->getDescription(),found->getWeight(),found->getValue(),0,"unknown",0);
         equippedWeapon = w;
     }

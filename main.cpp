@@ -33,6 +33,8 @@ int main() {
         string bossName = readLine("Nombre del jefe final: ");
         Race race = selectRace();
 
+        showTutorial();
+
         FileLoader loader("data");
         World* world = loader.loadWorld("world.json", bossName);
 
@@ -68,9 +70,9 @@ void showTutorial() {
     cout << "-Escribe [i] para ver tu inventario\n";
     cout << "-Escribe [s] para ver el estado de tu heroe\n";
     cout << "-Recoge objetos para mejorar tu personaje\n";
-    cout << "-Equipa armas para hacer mas danno en combate\n";
-    cout << "-Usa pociones durante el combate para curarte\n";
-    cout << "-Encuentra el 'Iron Key' para entrar a la mazmorra\n";
+    cout << "-Equipa armas fuera de combate para hacer mas danio en combate\n";
+    cout << "-Usa pociones durante el combate para curarte o mejorar tu ataque\n";
+    cout << "-Encuentra la 'Llave de Hierro' para entrar a la mazmorra\n";
     cout << "-Derrota al jefe final para ganar\n";
     cout << string(46, '=') << "\n";
     cout << "\nPresiona ENTER para continuar...";

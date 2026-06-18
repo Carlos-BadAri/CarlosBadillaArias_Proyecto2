@@ -5,6 +5,7 @@
 #include "CombatEvent.h"
 #include <iostream>
 #include <vector>
+#include <cstdlib> //this is for calculated rand()
 
 using namespace std;
 

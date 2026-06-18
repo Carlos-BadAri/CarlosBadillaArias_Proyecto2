@@ -3,9 +3,9 @@
 ## Descripcion general
 
 El jugador crea un heroe eligiendo nombre, raza y el nombre del
-jefe final. Luego explora un mundo de 11 espacios conectados
-repartidos en 3 zonas, recoge objetos, combate enemigos por turnos
-y busca derrotar al jefe final para salvar el reino.
+jefe final. Luego explora El Reino de Disandria, un mundo de 13 espacios
+conectados repartidos en 3 zonas, recoge objetos, combate enemigos
+por turnos y busca derrotar al jefe final para salvar el reino.
 
 ---
 
@@ -47,8 +47,7 @@ CarlosBadillaArias_Proyecto2/
 ├── ICombatStrategy.h         # Interfaz de estrategia
 │
 │   --- Mundo ---
-├── Space.h / .cpp            # Espacio / habitacion y conexiones
-├── Zone.h (en Space)         # Agrupacion de espacios (Composite)
+├── Space.h / .cpp            # Space, Zone e ISpaceComponent (Composite)
 ├── World.h / .cpp            # Contenedor del mundo y estado global
 │
 │   --- Eventos ---
@@ -101,6 +100,48 @@ CarlosBadillaArias_Proyecto2/
 
 ---
 
+## Mapa del mundo — El Reino de Disandria
+
+El mundo tiene **13 espacios** distribuidos en 3 zonas. Dos de los
+accesos estan bloqueados y requieren llaves especificas.
+
+### Zona 1 — La Aldea (inicio)
+
+| Espacio             | Enemigo          | Item disponible      |
+|---------------------|------------------|----------------------|
+| Plaza de la Aldea   | —                | Pocion de Salud      |
+| Forja del Herrero   | —                | Espada Oxidada       |
+
+### Zona 2 — Las Tierras Salvajes
+
+| Espacio                    | Enemigo                      | Item disponible       |
+|----------------------------|------------------------------|-----------------------|
+| Bosque Ancestral           | Lobo del Bosque (agresivo)   | Daga Elfica           |
+| Capilla en Ruinas          | La Llorona (aleatorio)       | Pocion Mayor          |
+| Cruce del Rio              | Trol del Rio (acorazado)     | —                     |
+| Campamento de Guerra Goblin| Jefe Guerrero Goblin         | Hacha de Guerra, Brebaje Berserker |
+| Paso de Montanna           | Golem de Montanna (defensivo)| Llave de Hierro       |
+| Torre del Mago             | —                            | Super Pocion          |
+| Paramo *                   | —                            | Espada Vorpal         |
+| La Casa de la Bruja        | —                            | Pocion de Hongos Danta (recompensa) |
+
+> \* El Paramo se accede desde el Bosque Ancestral con el **Polvo de Hadas**
+> (bloqueado, llave encontrada en las Profundidades de la Mazmorra).
+> La Casa de la Bruja se accede desde el Paramo sin bloqueo.
+
+### Zona 3 — La Mazmorra
+
+| Espacio                       | Enemigo                              | Item disponible  |
+|-------------------------------|--------------------------------------|------------------|
+| Entrada de la Mazmorra        | —                                    | —                |
+| Profundidades de la Mazmorra *| Caballero de las Sombras (enfurecido)| Medallon Oscuro, Polvo de Hadas |
+| Trono de la Oscuridad **      | Jefe Final (enfurecido)              | —                |
+
+> \* Requiere la **Llave de Hierro** (encontrada en el Paso de Montanna).
+> \*\* Requiere el **Medallon Oscuro** (encontrado en las Profundidades).
+
+---
+
 ## Archivos de entrada y salida
 
 El programa carga el mundo desde archivos `.json` en la carpeta
@@ -122,9 +163,9 @@ Al terminar la partida genera dos archivos en `output/`:
 | Singleton        | `Logger`                                                                 |
 | Abstract Factory | `IItemFactory`, `IEnemyFactory`, `MedievalItemFactory`, `MedievalEnemyFactory` |
 | Decorator        | `ItemDecorator`, `PoisonedItemDecorator`, `EnemyDecorator`, `ArmoredEnemyDecorator`, `EnragedEnemyDecorator` |
-| Composite        | `Zone` agrupa `Space`s — `CompositeObjective` agrupa sub-objetivos       |
+| Composite        | `ISpaceComponent` (interfaz), `Zone` agrupa `Space`s — `CompositeObjective` agrupa sub-objetivos |
 | Strategy         | `AggressiveStrategy`, `DefensiveStrategy`, `RandomStrategy`              |
-| Observer         | `IObserver` implementado por `Logger`                                    |
+| Observer         | `IObserver` implementado por `Logger` y `CombatEvent`                    |
 
 ---
 

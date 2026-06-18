@@ -4,7 +4,7 @@
 
 #include "CombatEvent.h"
 #include <iostream>
-#include <cstdlib>
+#include <vector>
 
 using namespace std;
 
@@ -62,27 +62,50 @@ bool CombatEvent::activate(IObserver* logger) {
 
         int action = playerTurn();
 
-        if (action == 1) {
+       auto playerAttack = [&]() {
             int dmg = character->getEffectiveAttack() + (rand() % 5);
             enemy->takeDamage(dmg);
             logLine(character->getName() + " ataca por " + to_string(dmg) + " de dannio!", logger);
+        };
+
+        if (action == 1) {
+            playerAttack();
             if (!enemy->isAlive()) {
                 break;
             }
 
         } else if (action == 2) {
-            if (character->getInventory().isEmpty()) {
-                logLine("No tienes objetos! Forzado a atacar.", logger);
-                enemy->takeDamage(character->getEffectiveAttack());
+            //You can only see the items, the weapons and the keys can't be used in the battle
+            vector<shared_ptr<Item>> consumables;
+            for (int i = 0; i < character->getInventory().getSize(); i++) {
+                shared_ptr<Item> it = character->getInventory()[i];
+                if (it->getCategory() == "consumable") {
+                    consumables.push_back(it);
+                }
+            }
+            if (consumables.empty()) {
+                logLine("No tienes objetos utilizables en combate! Forzado a atacar.", logger);
+                playerAttack();
                 if (!enemy->isAlive()) {
                     break;
                 }
             } else {
-                cout << "\nInventario:\n" << character->getInventory().listContents();
-                cout << "Nombre del objeto: ";
+                cout << "\nObjetos:\n";
+                for (size_t i = 0; i < consumables.size(); i++) {
+                    cout << "  " << (i + 1) << ". " << consumables[i]->describe() << "\n";
+                }
+                cout << "  0. Salir y atacar\n";
+                cout << "Nombre del objeto (o 0 para Salir y atacar): ";
                 string itemName;
                 getline(cin, itemName);
-                if (character->useConsumable(itemName)) {
+
+                if (itemName == "0") {
+                    logLine(character->getName() + " sale del inventario y ataca!", logger);
+                    playerAttack();
+                    if (!enemy->isAlive()) {
+                        break;
+                    }
+                } else if (character->useConsumable(itemName)) {
                     logLine("Usaste: " + itemName, logger);
                 } else {
                     logLine("No se pudo usar ese objeto.", logger);
